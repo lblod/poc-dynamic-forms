@@ -1,0 +1,68 @@
+@prefix ext: <http://mu.semte.ch/vocabularies/ext/>.
+@prefix mu: <http://mu.semte.ch/vocabularies/core/>.
+@prefix adms: <http://www.w3.org/ns/adms#>.
+@prefix : <http://data.lblod.info/>.
+@prefix formNodes: <http://data.lblod.info/formNodes/>.
+@prefix formInputs: <http://data.lblod.info/formInputs/>.
+@prefix dynamicSubforms: <http://data.lblod.info/dynamicSubforms/>.
+@prefix dct: <http://purl.org/dc/terms/>
+
+formNodes:firsTestForm a ext:FormNode;
+                       mu:uuid "36555f8b-c788-413c-ab6c-c91cd0033ac5";
+                       ext:formInput formInputs:firstFormInputA, formInputs:firstFormInputB, formInputs:firstFormInputC.
+
+formInputs:firstFormInputA a ext:FormInput;
+                           mu:uuid "ab367540-7056-45f8-ba48-f60e7bc65fbf";
+                           ext:index 1;
+                           ext:displayType "text";
+                           dct:title "User name";
+                           adms:identifier "firstFormInputA".
+
+formInputs:firstFormInputB a ext:FormInput;
+                           mu:uuid "92a7428f-de80-43aa-b017-6df44ef1ee24";
+                           ext:index 2;
+                           ext:displayType "text";
+                           dct:title "Say hello";
+                           adms:identifier "firstFormInputB";
+                           ext:dynamicSubforms dynamicSubforms:firstFormInputBDyn.
+
+formInputs:firstFormInputC a ext:FormInput;
+                           mu:uuid "72e077a1-365d-40a8-a807-8970dc0a0266";
+                           ext:index 3;
+                           dct:title "Closing notes";
+                           ext:displayType "text";
+                           adms:identifier "firstFormInputC".
+
+dynamicSubforms:firstFormInputBDyn a ext:DynamicSubform;
+                                   mu:uuid "57850394-dd8e-47ad-b898-01122f32f9fc";
+                                   ext:key "firstFormInputB";
+                                   ext:value "hello";
+                                   ext:hasFormNode formNodes:firstDynForm.
+
+dynamicSubforms:secondFormInputBDyn a ext:DynamicSubform;
+                                    mu:uuid "21f28055-aad9-40d3-82c4-a6daa66b6c4b";
+                                    ext:key "firstFormInputB";
+                                    ext:value "42";
+                                    ext:hasFormNode formNodes:secondDynForm.
+
+formNodes:firstDynForm a ext:FormNode;
+                       mu:uuid "06f8e1be-3245-497c-8943-c6d2171d0eac";
+                       ext:formInput formInputs:firstDynInputA.
+
+formNodes:secondDynForm a ext:FormNode;
+                        mu:uuid "fe26bac7-5310-4962-8216-e8286852670a";
+                        ext:formInput formInputs:firstDynInputB.
+
+formInputs:firstDynInputA a ext:FormInput;
+                          mu:uuid "3fbe8645-4cf4-4d0f-9096-8570d052dbf6";
+                          ext:index 1;
+                          ext:displayType "text";
+                          dct:title "Yo hello";
+                          adms:identifier "firstDynInputA".
+
+formInputs:firstDynInputB a ext:FormInput;
+                          mu:uuid "94fe320b-bd95-4ffc-8493-dfb16168aef8";
+                          ext:index 1;
+                          ext:displayType "text";
+                          dct:title "The magic number";
+                          adms:identifier "firstDynInputB".
