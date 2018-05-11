@@ -22,6 +22,18 @@ defmodule Dispatcher do
   #   Proxy.forward conn, path, "http://resource/themes/"
   # end
 
+  match "/form-nodes/*path" do
+    Proxy.forward conn, path, "http://resource/form-nodes/"
+  end
+
+  match "/form-inputs/*path" do
+    Proxy.forward conn, path, "http://resource/form-inputs/"
+  end
+
+  match "/dynamic-subforms/*path" do
+    Proxy.forward conn, path, "http://resource/dynamic-subforms/"
+  end
+
   match _ do
     send_resp( conn, 404, "Route not found.  See config/dispatcher.ex" )
   end

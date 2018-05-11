@@ -1,67 +1,41 @@
 (in-package :mu-cl-resources)
 
-;;;;
-;; NOTE
-;; docker-compose stop; docker-compose rm; docker-compose up
-;; after altering this file.
+(define-resource form-node ()
+  :class (s-prefix "ext:FormNode")
+  :has-many `((form-input :via ,(s-prefix "ext:formInput")
+                          :as "children")
+              (dynamic-subform :via ,(s-prefix "ext:hasFormNode")
+                               :inverse t
+                               :as "parents"))
+  :resource-base (s-url "http://data.lblod.info/form-nodes/")
+  :on-path "form-nodes")
 
-;; Describe your resources here
+(define-resource form-input ()
+  :class (s-prefix "ext:FormInput")
+  :properties `((:index :number ,(s-prefix "ext:index"))
+                (:display-type :string ,(s-prefix "ext:displayType"))
+                (:label :string ,(s-prefix "dct:title"))
+                (:options :string ,(s-prefix "ext:string"))
+                (:identifier :string ,(s-prefix "adms:identifier")))
+  :has-many `((dynamic-subform :via ,(s-prefix "ext:dynamicSubforms")
+                               :as "dynamic-subforms"))
+  :resource-base (s-url "http://data.lblod.info/form-inputs/")
+  :on-path "form-inputs")
 
-;; The general structure could be described like this:
-;;
-;; (define-resource <name-used-in-this-file> ()
-;;   :class <class-of-resource-in-triplestore>
-;;   :properties `((<json-property-name-one> <type-one> ,<triplestore-relation-one>)
-;;                 (<json-property-name-two> <type-two> ,<triplestore-relation-two>>))
-;;   :has-many `((<name-of-an-object> :via ,<triplestore-relation-to-objects>
-;;                                    :as "<json-relation-property>")
-;;               (<name-of-an-object> :via ,<triplestore-relation-from-objects>
-;;                                    :inverse t ; follow relation in other direction
-;;                                    :as "<json-relation-property>"))
-;;   :has-one `((<name-of-an-object :via ,<triplestore-relation-to-object>
-;;                                  :as "<json-relation-property>")
-;;              (<name-of-an-object :via ,<triplestore-relation-from-object>
-;;                                  :as "<json-relation-property>"))
-;;   :resource-base (s-url "<string-to-which-uuid-will-be-appended-for-uri-of-new-items-in-triplestore>")
-;;   :on-path "<url-path-on-which-this-resource-is-available>")
+(define-resource dynamic-subform ()
+  :class (s-prefix "ext:DynamicSubform")
+  :properties `((:key :string ,(s-prefix "ext:key"))
+                (:value :string ,(s-prefix "ext:value")))
+  :has-one `((form-node :via ,(s-prefix "ext:hasFormNode")
+                        :as "form-node"))
+  :resource-base (s-url "http://data.lblod.info/dynamic-subforms/")
+  :on-path "dynamic-subforms")
 
+(define-resource form-solution ()
+  :class (s-prefix "ext:FormSolution")
+  :properties `((:answers :string ,(s-prefix "ext:answers")))
+  :has-one `((form-node :via ,(s-prefix "ext:hasForm")
+                        :as "form-node"))
+  :resource-base (s-url "http://data.lblod.info/solutions/")
+  :on-path "form-solutions")
 
-;; An example setup with a catalog, dataset, themes would be:
-;;
-;; (define-resource catalog ()
-;;   :class (s-prefix "dcat:Catalog")
-;;   :properties `((:title :string ,(s-prefix "dct:title")))
-;;   :has-many `((dataset :via ,(s-prefix "dcat:dataset")
-;;                        :as "datasets"))
-;;   :resource-base (s-url "http://webcat.tmp.semte.ch/catalogs/")
-;;   :on-path "catalogs")
-
-;; (define-resource dataset ()
-;;   :class (s-prefix "dcat:Dataset")
-;;   :properties `((:title :string ,(s-prefix "dct:title"))
-;;                 (:description :string ,(s-prefix "dct:description")))
-;;   :has-one `((catalog :via ,(s-prefix "dcat:dataset")
-;;                       :inverse t
-;;                       :as "catalog"))
-;;   :has-many `((theme :via ,(s-prefix "dcat:theme")
-;;                      :as "themes"))
-;;   :resource-base (s-url "http://webcat.tmp.tenforce.com/datasets/")
-;;   :on-path "datasets")
-
-;; (define-resource distribution ()
-;;   :class (s-prefix "dcat:Distribution")
-;;   :properties `((:title :string ,(s-prefix "dct:title"))
-;;                 (:access-url :url ,(s-prefix "dcat:accessURL")))
-;;   :resource-base (s-url "http://webcat.tmp.tenforce.com/distributions/")
-;;   :on-path "distributions")
-
-;; (define-resource theme ()
-;;   :class (s-prefix "tfdcat:Theme")
-;;   :properties `((:pref-label :string ,(s-prefix "skos:prefLabel")))
-;;   :has-many `((dataset :via ,(s-prefix "dcat:theme")
-;;                        :inverse t
-;;                        :as "datasets"))
-;;   :resource-base (s-url "http://webcat.tmp.tenforce.com/themes/")
-;;   :on-path "themes")
-
-;;
