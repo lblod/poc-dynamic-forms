@@ -38,9 +38,27 @@
 
 (define-resource form-solution ()
   :class (s-prefix "ext:FormSolution")
-  :properties `((:answers :string ,(s-prefix "ext:answers")))
+  :properties `((:has-owner :string ,(s-prefix "ext:hasOwnerAsString")))
   :has-one `((form-node :via ,(s-prefix "ext:hasForm")
-                        :as "form-node"))
+                        :as "form-node")
+             (company :via ,(s-prefix "ext:hasCompany")
+                      :as "company"))
   :resource-base (s-url "http://data.lblod.info/solutions/")
   :on-path "form-solutions")
 
+
+;;; bogus model for testing purpose
+
+(define-resource company ()
+  :class (s-prefix "ext:Company")
+  :properties `((:name :string ,(s-prefix "dct:title")))
+  :has-one `((person :via ,(s-prefix "ext:owner")
+                     :as "owner"))
+  :resource-base (s-url "http://data.lblod.info/companies/")
+  :on-path "companies")
+
+(define-resource person ()
+  :class (s-prefix "foaf:Person")
+  :properties `((:name :string ,(s-prefix "foaf:name")))
+  :resource-base (s-url "http://data.lblod.info/people/")
+  :on-path "people")

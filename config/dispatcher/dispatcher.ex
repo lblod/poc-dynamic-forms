@@ -34,6 +34,14 @@ defmodule Dispatcher do
     Proxy.forward conn, path, "http://resource/dynamic-subforms/"
   end
 
+  match "/people/*path" do
+    Proxy.forward conn, path, "http://resource/people/"
+  end
+
+  match "/companies/*path" do
+    Proxy.forward conn, path, "http://resource/companies/"
+  end
+
   match _ do
     send_resp( conn, 404, "Route not found.  See config/dispatcher.ex" )
   end
