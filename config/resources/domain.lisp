@@ -2,6 +2,7 @@
 
 (define-resource form-node ()
   :class (s-prefix "ext:FormNode")
+  :properties `((:input-type-map :string ,(s-prefix "ext:typeMap")))
   :has-many `((form-input :via ,(s-prefix "ext:formInput")
                           :as "children")
               (dynamic-subform :via ,(s-prefix "ext:hasFormNode")
@@ -25,6 +26,10 @@
 (define-resource dynamic-subform ()
   :class (s-prefix "ext:DynamicSubform")
   :properties `((:key :string ,(s-prefix "ext:key"))
+                ;; match-kind is defined for resource properties.
+                ;; Should be "uri" to match on object's uri property,
+                ;; or "uuid" to match on its identifier.
+                (:match-kind :string ,(s-prefix "ext:matchKind"))
                 (:value :string ,(s-prefix "ext:value")))
   :has-one `((form-node :via ,(s-prefix "ext:hasFormNode")
                         :as "form-node"))

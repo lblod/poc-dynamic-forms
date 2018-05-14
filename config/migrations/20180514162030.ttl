@@ -1,0 +1,47 @@
+@prefix ext: <http://mu.semte.ch/vocabularies/ext/>.
+@prefix mu: <http://mu.semte.ch/vocabularies/core/>.
+@prefix adms: <http://www.w3.org/ns/adms#>.
+@prefix : <http://data.lblod.info/>.
+@prefix formNodes: <http://data.lblod.info/formNodes/>.
+@prefix formInputs: <http://data.lblod.info/formInputs/>.
+@prefix dynamicSubforms: <http://data.lblod.info/dynamicSubforms/>.
+@prefix dct: <http://purl.org/dc/terms/>
+
+formNodes:smartTestForm a ext:FormNode;
+                        mu:uuid "9a37fd6d-cf64-4359-abbb-b68b03bae101";
+                        ext:typeMap "{\"company\": \"company\", \"company.owner\": \"person\"}";
+                        ext:formInput formInputs:smartFormInputA, formInputs:smartFormInputB.
+
+formInputs:smartFormInputA a ext:FormInput;
+                           mu:uuid "a4e2bba4-e61a-4f0c-b883-5055f4a7456b";
+                           ext:index 1;
+                           ext:displayType "text";
+                           dct:title "Company name";
+                           adms:identifier "company.name".
+
+formInputs:smartFormInputB a ext:FormInput;
+                           mu:uuid "9d3c8e46-afb8-4af8-b629-6c8c262a6544";
+                           ext:index 2;
+                           ext:displayType "text";
+                           dct:title "Say yes to enter owner name";
+                           adms:identifier "hasOwner";
+                           ext:dynamicSubforms dynamicSubforms:smartFormInputBDyn.
+
+
+dynamicSubforms:smartFormInputBDyn a ext:DynamicSubform;
+                                   mu:uuid "5cfaeee3-7aa7-46c8-820a-c6a7ec9b81dc";
+                                   ext:key "hasOwner";
+                                   ext:value "yes";
+                                   ext:hasFormNode formNodes:smartDynForm.
+
+formNodes:smartDynForm a ext:FormNode;
+                       mu:uuid "a9a4afa3-dfde-41bf-940f-b7ad755c5f09";
+                       ext:typeMap "{\"foo\":\"bar\"}";
+                       ext:formInput formInputs:smartDynInputA.
+
+formInputs:smartDynInputA a ext:FormInput;
+                          mu:uuid "74ac5faf-e51d-457b-b28a-d39df0a1d355";
+                          ext:index 1;
+                          ext:displayType "text";
+                          dct:title "Company's owner name";
+                          adms:identifier "company.owner.name".
